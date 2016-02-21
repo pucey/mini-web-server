@@ -17,7 +17,7 @@
 namespace
 {
     std::ofstream LOG("webserver.log");
-    
+
     void thread_proc(int fd, std::string req)
     {
         LOG << "client (" << fd << "), req = " << req << std::endl;
@@ -145,10 +145,14 @@ namespace network
         LOG << "path = " << path << std::endl;
         std::ifstream in(path);
         if (in) {
-            std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-            LOG << build_response(HTTP_OK, content) << std::endl;
+            const std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+            const auto response = build_response(HTTP_OK, content);
+            LOG << response << std::endl;
+            write(fd, response.c_str(), response.size());
         } else {
-            LOG << build_response(HTTP_NOT_FOUND, "") << std::endl;
+            const auto response = build_response(HTTP_NOT_FOUND, "");
+            LOG << response << std::endl;
+            write(fd, response.c_str(), response.size());
         }
     }
     
