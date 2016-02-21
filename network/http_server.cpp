@@ -16,7 +16,7 @@
 
 namespace
 {
-    std::ofstream LOG("/tmp/webserver.log");
+    std::ofstream LOG("/tmp/webserver.log", std::ios_base::app);
 
     void thread_proc(int fd, std::string req)
     {
@@ -38,6 +38,7 @@ namespace network
             // root should be without /
             m_root.pop_back();
         }
+        LOG << "HTTP Server params: root = " << m_root << "; ip = " << ip_address << "; port = " << port << std::endl;
         event_init();
 
         m_listen_fd = socket(AF_INET, SOCK_STREAM, 0);
