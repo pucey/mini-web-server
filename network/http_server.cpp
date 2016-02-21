@@ -132,6 +132,8 @@ namespace network
     void
     http_server::proceed_get_request(int fd, const std::string& root, const std::string& req)
     {
+	LOG << "REQUEST" << std::endl;
+	LOG << req << std::endl;
         std::istringstream iss(req);
         std::string temp;
         std::string file;
