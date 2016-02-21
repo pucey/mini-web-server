@@ -6,6 +6,7 @@ set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
 set(HTTP_SERVER_SRC ${PROJECT_ROOT}/network/http_server.cpp)
 add_library(HTTP_SERVER_LIB STATIC ${HTTP_SERVER_SRC})
+target_include_directories(HTTP_SERVER_LIB PUBLIC {$PROJECT_ROOT}/include)
 
 set(MAIN_APP ${PROJECT_ROOT}/main.cpp)
 add_executable(final ${MAIN_APP})
