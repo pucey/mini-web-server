@@ -66,7 +66,7 @@ namespace network
             throw http_exception("[-] set_non_block failed");
         }
         
-        LOG << "HTTP server successfully started\n";
+        LOG << "HTTP server successfully started" << std::endl;
 
         event ev_accept;
         event_set(&ev_accept, m_listen_fd, EV_READ|EV_PERSIST, on_accept, this);
@@ -88,12 +88,12 @@ namespace network
         }
 
         if (set_non_block(client_fd) < 0) {
-            LOG << "failed to set client socket non-blocking\n";
+            LOG << "failed to set client socket non-blocking" << std::endl;
         }
 
-        LOG << "accept = " << std::this_thread::get_id() << "\n";
+        LOG << "accept = " << std::this_thread::get_id() << std::endl;
         //std::thread t([arg, client_fd](){
-            LOG << "thread inside accept = " << std::this_thread::get_id() << "\n";
+            LOG << "thread inside accept = " << std::this_thread::get_id() << std::endl;
             client_t* client = new client_t();
             client->pHttp_server = reinterpret_cast<http_server*>(arg);
             event_set(&client->ev_read, client_fd, EV_READ|EV_PERSIST, on_read, client);
@@ -101,7 +101,7 @@ namespace network
         //});
         //t.join();
 
-        LOG << "Accepted connection from " << inet_ntoa(client_addr.sin_addr) << "\n";
+        LOG << "Accepted connection from " << inet_ntoa(client_addr.sin_addr) << std::endl;
     }
     
     void
@@ -113,9 +113,9 @@ namespace network
         int len = read(fd, buf, sizeof(buf));
         if (len <= 0) {
             if (len == 0) {
-                LOG << "Client disconnected.\n";
+                LOG << "Client disconnected." << std::endl;
             } else {
-                LOG << "Socket failure, disconnecting client\n";
+                LOG << "Socket failure, disconnecting client" << std::endl;
             }
             close(fd);
             event_del(&client->ev_read);
@@ -142,13 +142,13 @@ namespace network
             file = file.substr(pos + 1);
         }
         const std::string path = root + file;
-        LOG << "path = " << path << "\n";
+        LOG << "path = " << path << std::endl;
         std::ifstream in(path);
         if (in) {
             std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-            LOG << build_response(HTTP_OK, content);
+            LOG << build_response(HTTP_OK, content) << std::endl;
         } else {
-            LOG << build_response(HTTP_NOT_FOUND, "");
+            LOG << build_response(HTTP_NOT_FOUND, "") << std::endl;
         }
     }
     
