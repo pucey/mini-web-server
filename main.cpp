@@ -5,8 +5,10 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <unistd.h>
 #include "network/http_exception.hpp"
 #include "network/http_server.hpp"
+
 
 int
 main(int argc, char **argv)
@@ -33,14 +35,14 @@ main(int argc, char **argv)
         }
     }
 
-    //if (fork()) {
-    //    return EXIT_SUCCESS;
-    //}
+    if (fork()) {
+        return EXIT_SUCCESS;
+    }
     
     // child process
-    //close(STDIN_FILENO);
-    //close(STDOUT_FILENO);
-    //close(STDERR_FILENO);
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
     try {
         network::http_server server(root, ip, port);
         server.run();
