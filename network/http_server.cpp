@@ -16,9 +16,11 @@
 
 namespace
 {
+    std::ofstream LOG("webserver.log");
+    
     void thread_proc(int fd, std::string req)
     {
-        std::cout << "client (" << fd << "), req = " << req << std::endl;
+        LOG << "client (" << fd << "), req = " << req << std::endl;
     }
 }
 
@@ -64,7 +66,7 @@ namespace network
             throw http_exception("[-] set_non_block failed");
         }
         
-        std::cout << "HTTP server successfully started\n";
+        LOG << "HTTP server successfully started\n";
 
         event ev_accept;
         event_set(&ev_accept, m_listen_fd, EV_READ|EV_PERSIST, on_accept, this);
@@ -86,12 +88,12 @@ namespace network
         }
 
         if (set_non_block(client_fd) < 0) {
-            std::cerr << "failed to set client socket non-blocking\n";
+            LOG << "failed to set client socket non-blocking\n";
         }
 
-        std::cout << "accept = " << std::this_thread::get_id() << "\n";
+        LOG << "accept = " << std::this_thread::get_id() << "\n";
         //std::thread t([arg, client_fd](){
-            std::cout << "thread inside accept = " << std::this_thread::get_id() << "\n";
+            LOG << "thread inside accept = " << std::this_thread::get_id() << "\n";
             client_t* client = new client_t();
             client->pHttp_server = reinterpret_cast<http_server*>(arg);
             event_set(&client->ev_read, client_fd, EV_READ|EV_PERSIST, on_read, client);
@@ -99,7 +101,7 @@ namespace network
         //});
         //t.join();
 
-        std::cout << "Accepted connection from " << inet_ntoa(client_addr.sin_addr) << "\n";
+        LOG << "Accepted connection from " << inet_ntoa(client_addr.sin_addr) << "\n";
     }
     
     void
@@ -111,9 +113,9 @@ namespace network
         int len = read(fd, buf, sizeof(buf));
         if (len <= 0) {
             if (len == 0) {
-                std::cout << "Client disconnected.\n";
+                LOG << "Client disconnected.\n";
             } else {
-                std::cout << "Socket failure, disconnecting client\n";
+                LOG << "Socket failure, disconnecting client\n";
             }
             close(fd);
             event_del(&client->ev_read);
@@ -140,13 +142,13 @@ namespace network
             file = file.substr(pos + 1);
         }
         const std::string path = root + file;
-        std::cout << "path = " << path << "\n";
+        LOG << "path = " << path << "\n";
         std::ifstream in(path);
         if (in) {
             std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-            std::cout << build_response(HTTP_OK, content);
+            LOG << build_response(HTTP_OK, content);
         } else {
-            std::cout << build_response(HTTP_NOT_FOUND, "");
+            LOG << build_response(HTTP_NOT_FOUND, "");
         }
     }
     
