@@ -16,7 +16,7 @@
 
 namespace
 {
-    std::ofstream LOG("webserver.log");
+    std::ofstream LOG("/tmp/webserver.log");
 
     void thread_proc(int fd, std::string req)
     {
