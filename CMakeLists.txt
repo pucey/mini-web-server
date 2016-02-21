@@ -3,11 +3,11 @@ project(MiniWebServer)
 
 set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
-include(libevent)
+include(ExternalProject)
 ExternalProject_Add(
   libevent
   SOURCE_DIR ${CMAKE_SOURCE_DIR}/libevent
-  CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/libevent/configure --prefix=${CMAKE_SOURCE_DIR}
+  CONFIGURE_COMMAND chmod +x ${CMAKE_SOURCE_DIR}/libevent/configure && ${CMAKE_SOURCE_DIR}/libevent/configure --prefix=${CMAKE_SOURCE_DIR}
   PREFIX ${CMAKE_SOURCE_DIR}
   BUILD_COMMAND make
   INSTALL_COMMAND make install
