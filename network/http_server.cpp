@@ -34,6 +34,10 @@ namespace network
     http_server::http_server(std::string root_dir, const std::string& ip_address, int port)
         : m_root(std::move(root_dir))
     {
+        if (m_root.back() == '//') {
+            // root should be without /
+            m_root.pop_back();
+        }
         event_init();
 
         m_listen_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -132,17 +136,17 @@ namespace network
     void
     http_server::proceed_get_request(int fd, const std::string& root, const std::string& req)
     {
-	LOG << "REQUEST" << std::endl;
-	LOG << req << std::endl;
+        LOG << "REQUEST" << std::endl;
+        LOG << req << std::endl;
         std::istringstream iss(req);
         std::string temp;
         std::string file;
         iss >> temp >> file;
         
-        auto pos = file.find('/');
-        if (pos != std::string::npos && pos != file.size() - 1) {
-            file = file.substr(pos + 1);
-        }
+        // auto pos = file.find('/');
+        // if (pos != std::string::npos && pos != file.size() - 1) {
+            // file = file.substr(pos + 1);
+        // }
         const std::string path = root + file;
         LOG << "path = " << path << std::endl;
         std::ifstream in(path);
