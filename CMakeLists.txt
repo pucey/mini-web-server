@@ -3,16 +3,37 @@ project(MiniWebServer)
 
 set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
-include(ExternalProject)
-ExternalProject_Add(
-  libevent
-  SOURCE_DIR ${CMAKE_SOURCE_DIR}/libevent
-  CONFIGURE_COMMAND /bin/sh ${CMAKE_SOURCE_DIR}/libevent/configure && ${CMAKE_SOURCE_DIR}/libevent/configure --prefix=${CMAKE_SOURCE_DIR}
-  PREFIX ${CMAKE_SOURCE_DIR}
-  BUILD_COMMAND make
-  INSTALL_COMMAND make install
-  BUILD_IN_SOURCE 1
+execute_process(
+  COMMAND tar zxf libevent.tar.gz
+  WORKING_DIRECTORY ${PROJECT_ROOT}
 )
+
+execute_process(
+  COMMAND ./configure --prefix=${PROJECT_ROOT}
+  WORKING_DIRECTORY ${PROJECT_ROOT}/libevent
+)
+
+execute_process(
+  COMMAND make
+  WORKING_DIRECTORY ${PROJECT_ROOT}/libevent
+)
+
+execute_process(
+  COMMAND make install
+  WORKING_DIRECTORY ${PROJECT_ROOT}/libevent
+)
+
+
+#include(ExternalProject)
+#ExternalProject_Add(
+#  libevent
+#  SOURCE_DIR ${PROJECT_ROOT}/libevent
+#  CONFIGURE_COMMAND ${PROJECT_ROOT}/libevent/configure --prefix=${PROJECT_ROOT}
+#  PREFIX ${PROJECT_ROOT}
+#  BUILD_COMMAND make
+#  INSTALL_COMMAND make install
+#  BUILD_IN_SOURCE 1
+#)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
