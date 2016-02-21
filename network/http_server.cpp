@@ -34,7 +34,7 @@ namespace network
     http_server::http_server(std::string root_dir, const std::string& ip_address, int port)
         : m_root(std::move(root_dir))
     {
-        if (m_root.back() == '//') {
+        if (m_root.back() == '/') {
             // root should be without /
             m_root.pop_back();
         }
