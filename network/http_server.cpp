@@ -162,7 +162,7 @@ namespace network
         std::ostringstream oss;
         oss << "HTTP/1.0 " << response << " " << responseToString.find(response)->second << "\r\n";
         if (data.size()) {
-            oss << "Content-Length:" << data.size() << "\r\n";
+            oss << "Content-Length: " << data.size() << "\r\n";
             oss << "Content-Type: text/html\r\n\r\n" << data;
         }
         return oss.str();
