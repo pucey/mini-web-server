@@ -7,7 +7,7 @@ include(ExternalProject)
 ExternalProject_Add(
   libevent
   SOURCE_DIR ${CMAKE_SOURCE_DIR}/libevent
-  CONFIGURE_COMMAND chmod +x ${CMAKE_SOURCE_DIR}/libevent/configure && ${CMAKE_SOURCE_DIR}/libevent/configure --prefix=${CMAKE_SOURCE_DIR}
+  CONFIGURE_COMMAND /bin/sh ${CMAKE_SOURCE_DIR}/libevent/configure && ${CMAKE_SOURCE_DIR}/libevent/configure --prefix=${CMAKE_SOURCE_DIR}
   PREFIX ${CMAKE_SOURCE_DIR}
   BUILD_COMMAND make
   INSTALL_COMMAND make install
