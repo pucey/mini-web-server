@@ -155,7 +155,10 @@ namespace network
         LOG << "path = " << path << std::endl;
         std::ifstream in(path);
         if (in) {
-            const std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+            std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+			if (content.back()=='\n') {
+				content.pop_back();
+			}
             const auto response = build_response(HTTP_OK, content);
             LOG << response << std::endl;
             write(fd, response.c_str(), response.size());
