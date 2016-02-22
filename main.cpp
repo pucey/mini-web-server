@@ -1,7 +1,3 @@
-// https://github.com/jasonish/libevent-examples/blob/master/echo-server/libevent_echosrv1.c
-// 1. Do cmake
-// 2. Run daemon and try log
-// 3. Run http
 #include <iostream>
 #include <string>
 #include <cstdlib>
