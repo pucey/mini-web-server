@@ -131,6 +131,9 @@ namespace network
         std::string request(buf, buf + len);
         if (request.find("GET") == 0) {
             proceed_get_request(fd, client->pHttp_server->m_root, request);
+			shutdown(fd, SHUT_RDWR);
+			event_del(&client->ev_read);
+			delete client;
         }
     }
 
@@ -144,10 +147,10 @@ namespace network
         std::string file;
         iss >> temp >> file;
         
-        // auto pos = file.find('/');
-        // if (pos != std::string::npos && pos != file.size() - 1) {
-            // file = file.substr(pos + 1);
-        // }
+        const auto pos = file.find('?');
+        if (pos != std::string::npos) {
+            file = file.substr(0, pos);
+        }
         const std::string path = root + file;
         LOG << "path = " << path << std::endl;
         std::ifstream in(path);
@@ -157,7 +160,7 @@ namespace network
             LOG << response << std::endl;
             write(fd, response.c_str(), response.size());
         } else {
-            const auto response = build_response(HTTP_NOT_FOUND, "");
+            const auto response = build_response(HTTP_NOT_FOUND, "<H1>NOT FOUND</H1>");
             LOG << response << std::endl;
             write(fd, response.c_str(), response.size());
         }
@@ -169,9 +172,10 @@ namespace network
         std::ostringstream oss;
         oss << "HTTP/1.0 " << response << " " << responseToString.find(response)->second << "\r\n";
         if (data.size()) {
+			oss << "Connection: close\r\n";
             oss << "Content-Length: " << data.size() << "\r\n";
-            oss << "Content-Type: text/html\r\n\r\n" << data;
-        }
+		}
+		oss << "Content-Type: text/html\r\n\r\n" << data;
         return oss.str();
     }
     
