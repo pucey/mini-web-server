@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <cstdlib>
 #include <unistd.h>
 #include "network/http_exception.hpp"
 #include "network/http_server.hpp"
@@ -15,21 +14,19 @@ main(int argc, char **argv)
         std::cerr << "  " << argv[0] << " -d <dir> -h <ip> -p <port>\n";
         return EXIT_FAILURE;
     }
-    
-    std::string root;
-    std::string ip;
-    int port = -1;    
-    for (int i = 1; i < argc; i += 2) {
-        std::string option(argv[i]);
-        if (option == "-d") {
-            root = argv[i + 1];
-        } else if (option == "-h") {
-            ip = argv[i + 1];
-        } else if (option == "-p") {
-            //port = std::stoi(std::string(argv[i + 1]));
-            port = atoi(argv[i + 1]);
-        }
-    }
+
+	std::string root;
+	std::string ip;
+	int port = -1;
+	int opt = 0;
+	while ((opt = getopt(argc, argv, "h:p:d:t")) != -1) {
+		switch (opt) {
+		case 'h': ip = optarg; break;
+		case 'p': port = std::stoi(optarg); break;
+		case 'd': root = optarg; break;
+		}
+	}
+
 
     if (fork()) {
         return EXIT_SUCCESS;
