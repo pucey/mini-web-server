@@ -39,7 +39,6 @@ namespace network
             m_root.pop_back();
         }
         LOG << "HTTP Server params: root = " << m_root << "; ip = " << ip_address << "; port = " << port << std::endl;
-        event_init();
 
         m_listen_fd = socket(AF_INET, SOCK_STREAM, 0);
         if (m_listen_fd < 0) {
@@ -69,10 +68,10 @@ namespace network
                 
         LOG << "HTTP server successfully started" << std::endl;
 
-        sockaddr_in client_addr;
-        socklen_t client_len = sizeof(client_addr);
-
         while (1) {
+			sockaddr_in client_addr;
+			socklen_t client_len = sizeof(client_addr);
+
             int client_fd = accept(m_listen_fd, (sockaddr*)&client_addr, &client_len);
             if (client_fd == -1) {
                 throw http_exception("accept failed");
@@ -82,34 +81,6 @@ namespace network
             });
             t.detach();
         }
-    }
-    
-    void
-    http_server::on_accept(int fd, short ev, void *arg)
-    {
-        sockaddr_in client_addr;
-        socklen_t client_len = sizeof(client_addr);
-
-        int client_fd = accept(fd, (sockaddr*)&client_addr, &client_len);
-        if (client_fd == -1) {
-            throw http_exception("accept failed");
-        }
-
-        if (set_non_block(client_fd) < 0) {
-            LOG << "failed to set client socket non-blocking" << std::endl;
-        }
-
-        LOG << "accept = " << std::this_thread::get_id() << std::endl;
-        //std::thread t([arg, client_fd](){
-            LOG << "thread inside accept = " << std::this_thread::get_id() << std::endl;
-            client_t* client = new client_t();
-            client->pHttp_server = reinterpret_cast<http_server*>(arg);
-            event_set(&client->ev_read, client_fd, EV_READ|EV_PERSIST, on_read, client);
-            event_add(&client->ev_read, NULL);
-        //});
-        //t.join();
-
-        LOG << "Accepted connection from " << inet_ntoa(client_addr.sin_addr) << std::endl;
     }
     
     void

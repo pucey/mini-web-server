@@ -3,25 +3,25 @@ project(MiniWebServer)
 
 set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
-execute_process(
-  COMMAND tar zxf libevent.tar.gz
-  WORKING_DIRECTORY ${PROJECT_ROOT}
-)
+#execute_process(
+#  COMMAND tar zxf libevent.tar.gz
+#  WORKING_DIRECTORY ${PROJECT_ROOT}
+#)
 
-execute_process(
-  COMMAND ./configure --prefix=${PROJECT_ROOT}
-  WORKING_DIRECTORY ${PROJECT_ROOT}/libevent
-)
+#execute_process(
+#  COMMAND ./configure --prefix=${PROJECT_ROOT}
+#  WORKING_DIRECTORY ${PROJECT_ROOT}/libevent
+#)
 
-execute_process(
-  COMMAND make
-  WORKING_DIRECTORY ${PROJECT_ROOT}/libevent
-)
+#execute_process(
+#  COMMAND make
+#  WORKING_DIRECTORY ${PROJECT_ROOT}/libevent
+#)
 
-execute_process(
-  COMMAND make install
-  WORKING_DIRECTORY ${PROJECT_ROOT}/libevent
-)
+#execute_process(
+#  COMMAND make install
+#  WORKING_DIRECTORY ${PROJECT_ROOT}/libevent
+#)
 
 
 #include(ExternalProject)
