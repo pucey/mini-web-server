@@ -126,9 +126,9 @@ namespace network
         std::ifstream in(path);
         if (in) {
             std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-			if (content.back()=='\n') {
-				content.pop_back();
-			}
+			//if (content.back()=='\n') {
+			//	content.pop_back();
+			//}
             const auto response = build_response(HTTP_OK, content);
             LOG << response << std::endl;
             write(fd, response.c_str(), response.size());
