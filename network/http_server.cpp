@@ -65,28 +65,28 @@ namespace network
     {
         if (listen(m_listen_fd, SOMAXCONN) < 0) {
             throw http_exception("[-] listen failed");
-        }
-
-        if (set_non_block(m_listen_fd) < 0) {
-            throw http_exception("[-] set_non_block failed");
-        }
-        
+        }        
+                
         LOG << "HTTP server successfully started" << std::endl;
 
-        event ev_accept;
-        event_set(&ev_accept, m_listen_fd, EV_READ|EV_PERSIST, on_accept, this);
-        //event_set(&ev_accept, m_listen_fd, EV_READ|EV_PERSIST, on_accept, NULL);
-        event_add(&ev_accept, NULL);
+        sockaddr_in client_addr;
+        socklen_t client_len = sizeof(client_addr);
 
-        event_dispatch();
+        while (1) {
+            int client_fd = accept(m_listen_fd, (sockaddr*)&client_addr, &client_len);
+            if (client_fd == -1) {
+                throw http_exception("accept failed");
+            }
+            std::thread t([client_fd, this](){
+                on_read(client_fd, 0, this);
+            });
+            t.detach();
+        }
     }
     
     void
     http_server::on_accept(int fd, short ev, void *arg)
     {
-        sockaddr_in client_addr;
-        socklen_t client_len = sizeof(client_addr);
-
         int client_fd = accept(fd, (sockaddr*)&client_addr, &client_len);
         if (client_fd == -1) {
             throw http_exception("accept failed");
