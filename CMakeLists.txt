@@ -35,7 +35,7 @@ execute_process(
 #  BUILD_IN_SOURCE 1
 #)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
 set(HTTP_SERVER_EXCEPTION_SRC ${PROJECT_ROOT}/network/http_exception.cpp)
 add_library(HTTP_SERVER_EXCEPTION_LIB STATIC ${HTTP_SERVER_EXCEPTION_SRC})

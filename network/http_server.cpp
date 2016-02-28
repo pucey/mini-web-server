@@ -87,6 +87,9 @@ namespace network
     void
     http_server::on_accept(int fd, short ev, void *arg)
     {
+        sockaddr_in client_addr;
+        socklen_t client_len = sizeof(client_addr);
+
         int client_fd = accept(fd, (sockaddr*)&client_addr, &client_len);
         if (client_fd == -1) {
             throw http_exception("accept failed");
@@ -112,7 +115,7 @@ namespace network
     void
     http_server::on_read(int fd, short ev, void *arg)
     {
-        client_t *client = (client_t*)arg;
+        http_server* pHttp_server = reinterpret_cast<http_server*>(arg);
         u_char buf[8196] = {0};
 
         int len = read(fd, buf, sizeof(buf));
@@ -123,17 +126,13 @@ namespace network
                 LOG << "Socket failure, disconnecting client" << std::endl;
             }
             close(fd);
-            event_del(&client->ev_read);
-            delete client;
             return;
         }
 
         std::string request(buf, buf + len);
         if (request.find("GET") == 0) {
-            proceed_get_request(fd, client->pHttp_server->m_root, request);
+            proceed_get_request(fd, pHttp_server->m_root, request);
 			shutdown(fd, SHUT_RDWR);
-			event_del(&client->ev_read);
-			delete client;
         }
     }
 
