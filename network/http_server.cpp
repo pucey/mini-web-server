@@ -17,11 +17,6 @@
 namespace
 {
     std::ofstream LOG("/tmp/webserver.log", std::ios_base::app);
-
-    void thread_proc(int fd, std::string req)
-    {
-        LOG << "client (" << fd << "), req = " << req << std::endl;
-    }
 }
 
 namespace network
@@ -51,7 +46,6 @@ namespace network
 
         sockaddr_in listen_addr = {0};            
         listen_addr.sin_family = AF_INET;
-        //listen_addr.sin_addr.s_addr = INADDR_ANY;
         listen_addr.sin_addr.s_addr = inet_addr(ip_address.c_str());
         listen_addr.sin_port = htons(port);
         if (bind(m_listen_fd, (sockaddr*)&listen_addr, sizeof(listen_addr)) < 0) {
@@ -126,9 +120,6 @@ namespace network
         std::ifstream in(path);
         if (in) {
             std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-			//if (content.back()=='\n') {
-			//	content.pop_back();
-			//}
             const auto response = build_response(HTTP_OK, content);
             LOG << response << std::endl;
             write(fd, response.c_str(), response.size());
